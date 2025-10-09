@@ -69,28 +69,6 @@ const similarProducts = [
       },
     ],
   },
-  {
-    _id: 5,
-    name: "Product 5",
-    price: 300,
-    images: [
-      {
-        url: "https://picsum.photos/500/500?random=5",
-        altText: "Stylish Jacket 1",
-      },
-    ],
-  },
-  {
-    _id: 6,
-    name: "Product 6",
-    price: 300,
-    images: [
-      {
-        url: "https://picsum.photos/500/500?random=6",
-        altText: "Stylish Jacket 1",
-      },
-    ],
-  },
 ];
 
 const ProductDetails = () => {
@@ -105,7 +83,9 @@ const ProductDetails = () => {
     }
   };
 
-  const [mainImage, setMainImage] = useState(  selectedProduct.images?.[0]?.url || null);
+  const [mainImage, setMainImage] = useState(
+    selectedProduct.images?.[0]?.url || null
+  );
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
