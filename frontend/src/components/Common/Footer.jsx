@@ -31,7 +31,7 @@ const Footer = () => {
               type="submit"
               className="bg-black text-white px-6 py-3 text-sm rounded-r-md hover:bg-gray-800 transition-all"
             >
-              Sbuscribe
+              Subscribe
             </button>
           </form>
         </div>
