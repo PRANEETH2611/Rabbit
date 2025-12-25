@@ -8,9 +8,10 @@ import cartRoutes from "./routes/cartRoutes.js";
 import checkoutRoutes from "./routes/checkoutRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
-import subscibeRoutes from "./routes/subscriberRoute.js";
+import subsciberRoutes from "./routes/subscriberRoute.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import productAdminRoutes from "./routes/productAdminRoutes.js";
+import adminOrderRoutes from "./routes/adminOrderRoutes.js";
 
 const app = express();
 app.use(json());
@@ -34,11 +35,12 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use("/api", subscibeRoutes);
+app.use("/api", subsciberRoutes);
 
 // Admin
 app.use("/api/admin/users", adminRoutes);
 app.use("/api/admin/products", productAdminRoutes);
+app.use("/api/admin/orders", adminOrderRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
