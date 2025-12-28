@@ -1,15 +1,28 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  fetchUsers,
+  addUser,
+  deleteUser,
+  updateUser,
+} from "../../redux/slices/adminSlice";
 
 const UserManagement = () => {
-  const users = [
-    {
-      _id: 1234,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "admin",
-    },
-  ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+  const { users = [], loading, error } = useSelector((state) => state.admin);
+
+  // 🔐 Protect admin route
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      navigate("/");
+    } else {
+      dispatch(fetchUsers());
+    }
+  }, [user, dispatch, navigate]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,15 +32,15 @@ const UserManagement = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    dispatch(addUser(formData));
     setFormData({
       name: "",
       email: "",
@@ -37,21 +50,24 @@ const UserManagement = () => {
   };
 
   const handleRoleChange = (userId, newRole) => {
-    console.log({ id: userId, role: newRole });
+    dispatch(updateUser({ id: userId, role: newRole }));
   };
 
   const handleDeleteUser = (userId) => {
-    if(window.confirm("Are you sure you want to delete this user?")){
-        console.log("deleting user with ID", userId);
-        
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      dispatch(deleteUser(userId));
     }
-  }
+  };
+
+  if (loading) return <p className="text-center">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">User Managemant</h2>
-      {/* Add new user form */}
-      <div className="p-6 rounded-lg mb-6">
+      <h2 className="text-2xl font-bold mb-6">User Management</h2>
+
+      {/* ➕ Add New User */}
+      <div className="p-6 rounded-lg mb-6 border">
         <h3 className="text-lg font-bold mb-4">Add New User</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -65,6 +81,7 @@ const UserManagement = () => {
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-gray-700">Email</label>
             <input
@@ -76,6 +93,7 @@ const UserManagement = () => {
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-gray-700">Password</label>
             <input
@@ -87,8 +105,9 @@ const UserManagement = () => {
               required
             />
           </div>
+
           <div className="mb-4">
-            <label className="block text-gray-700">Roal</label>
+            <label className="block text-gray-700">Role</label>
             <select
               name="role"
               value={formData.role}
@@ -99,6 +118,7 @@ const UserManagement = () => {
               <option value="admin">Admin</option>
             </select>
           </div>
+
           <button
             type="submit"
             className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
@@ -108,7 +128,7 @@ const UserManagement = () => {
         </form>
       </div>
 
-      {/* User List Managemnt */}
+      {/* 📋 User List */}
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full text-left text-gray-500">
           <thead className="bg-gray-100 text-xs uppercase text-gray-700">
@@ -120,32 +140,42 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user._id} className="border-b hover:bg-gray-50">
-                <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
-                  {user.name}
-                </td>
-                <td className="p-4">{user.email}</td>
-                <td className="p-4">
-                  <select
-                    value={user.role}
-                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                    className="p-2 border rounded"
-                  >
-                    <option value="customer">Customer</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </td>
-                <td className="p-4">
-                  <button
-                    onClick={() => handleDeleteUser(user._id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
+            {users.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center p-4">
+                  No users found
                 </td>
               </tr>
-            ))}
+            ) : (
+              users.map((u) => (
+                <tr key={u._id} className="border-b hover:bg-gray-50">
+                  <td className="p-4 font-medium text-gray-900">
+                    {u.name}
+                  </td>
+                  <td className="p-4">{u.email}</td>
+                  <td className="p-4">
+                    <select
+                      value={u.role}
+                      onChange={(e) =>
+                        handleRoleChange(u._id, e.target.value)
+                      }
+                      className="p-2 border rounded"
+                    >
+                      <option value="customer">Customer</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
+                  <td className="p-4">
+                    <button
+                      onClick={() => handleDeleteUser(u._id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

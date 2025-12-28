@@ -6,11 +6,17 @@ import {
   FaStore,
   FaUser,
 } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../../redux/slices/authSlice";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 const AdminSidebar = () => {
   const navigate = useNavigate();
+  const dispath = useDispatch();
   const handleLogout = () => {
+    dispath(logout());
+    dispath(clearCart());
     navigate("/");
   };
   return (

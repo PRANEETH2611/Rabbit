@@ -7,8 +7,7 @@ const PayPalButton = ({ amount, onSuccess, onError }) => {
   return (
     <PayPalScriptProvider
       options={{
-        "client-id":
-          import.meta.env.VITE_PAYPAL_CLIENT_ID,
+        "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID,
         currency: "USD",
         intent: "CAPTURE",
       }}
@@ -17,7 +16,9 @@ const PayPalButton = ({ amount, onSuccess, onError }) => {
         style={{ layout: "vertical" }}
         createOrder={(data, actions) =>
           actions.order.create({
-            purchase_units: [{ amount: { value } }],
+            purchase_units: [
+              { amount: { value: parseFloat(amount).toFixed(2) } },
+            ],
           })
         }
         onApprove={(data, actions) =>
