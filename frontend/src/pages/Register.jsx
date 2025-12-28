@@ -1,86 +1,144 @@
-import React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import register from "../assets/register.webp";
-import { registerUser } from "../redux/slices/authSlice";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import registerImage from "../assets/register.webp";
+import { registerUser, loginUser } from "../redux/slices/authSlice";
+import { mergeCart } from "../redux/slices/cartSlice";
 
 const Register = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { user, guestId } = useSelector((state) => state.auth);
+  const { cart } = useSelector((state) => state.cart);
+
+  // 🔁 Redirect path
+  const redirect =
+    new URLSearchParams(location.search).get("redirect") || "/";
+  const isCheckoutRedirect = redirect.includes("checkout");
+
+  // 🌊 Redirect AFTER login state is fully ready
+  useEffect(() => {
+    const token = localStorage.getItem("userToken");
+    if (!user || !token) return;
+
+    const redirectPath = isCheckoutRedirect ? "/checkout" : "/";
+
+    if (cart?.products?.length > 0 && guestId) {
+      dispatch(mergeCart({ guestId }))
+        .unwrap()
+        .then(() => {
+          navigate(redirectPath);
+        })
+        .catch(() => {
+          navigate(redirectPath);
+        });
+    } else {
+      navigate(redirectPath);
+    }
+  }, [user, dispatch, navigate, cart, guestId, isCheckoutRedirect]);
+
+  // 📝 Register → Login (WAIT properly)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(registerUser({ name, email,password}));
+
+    try {
+      await dispatch(registerUser({ name, email, password })).unwrap();
+      await dispatch(loginUser({ email, password })).unwrap();
+      // ❌ no navigate here — useEffect handles it
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
 
   return (
-    <div className="flex">
-      <div className="w-full md:w-1/2 flex-col justify-center items-center p-8 md:p-12">
-        <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg border shadow-sm">
+    <div className="flex min-h-screen">
+      {/* Left Section */}
+      <div className="w-full md:w-1/2 flex justify-center items-center p-8">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md bg-white p-8 rounded-lg border shadow-sm"
+        >
           <div className="flex justify-center mb-6">
-            <h2 className="text-xl font-medium">Rabbit</h2>
+            <h2 className="text-xl font-semibold">Rabbit</h2>
           </div>
-          <h2 className="text-2xl font-bold text-center mb-6 ">Hey there! </h2>
-          <p className="text-center mb-6">
-            Enter your username and password to Login
+
+          <h2 className="text-2xl font-bold text-center mb-4">
+            Create your account
+          </h2>
+
+          <p className="text-center mb-6 text-gray-600">
+            Join us and start shopping
           </p>
+
           <div className="mb-4">
             <label className="block text-sm font-semibold mb-2">Name</label>
             <input
               type="text"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full p-2 border rounded"
-              placeholder="Enter your Name"
+              placeholder="Enter your name"
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-semibold mb-2">Email</label>
             <input
               type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded"
-              placeholder="Enter your email address"
+              placeholder="Enter your email"
             />
           </div>
-          <div className="mb-4">
+
+          <div className="mb-6">
             <label className="block text-sm font-semibold mb-2">Password</label>
             <input
               type="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded "
+              className="w-full p-2 border rounded"
               placeholder="Enter your password"
             />
           </div>
+
           <button
             type="submit"
             className="w-full bg-black text-white p-2 rounded-lg font-semibold hover:bg-gray-800 transition"
           >
             Sign Up
           </button>
+
           <p className="mt-6 text-center text-sm">
-            {" "}
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-500">
+            <Link
+              to={`/login?redirect=${encodeURIComponent(redirect)}`}
+              className="text-blue-500"
+            >
               Login
             </Link>
           </p>
         </form>
       </div>
 
-      <div className="hidden md:block w-1/2 bg-gray-800 ">
-        <div className="h-full flex flex-col justify-center items-center">
-          <img
-            src={register}
-            alt="Login to Account"
-            className="h-[750px] w-full object-cover"
-          />
-        </div>
+      {/* Right Section */}
+      <div className="hidden md:block w-1/2 bg-gray-800">
+        <img
+          src={registerImage}
+          alt="Register"
+          className="h-full w-full object-cover"
+        />
       </div>
     </div>
   );

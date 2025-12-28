@@ -1,21 +1,39 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaFilter } from "react-icons/fa";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import FilterSidebar from "./FilterSidebar";
 import SortOptions from "../components/Products/SortOptions";
 import ProductGrid from "../components/Products/ProductGrid";
+import { fetchProductsByFilters } from "../redux/slices/productsSlice";
 
 const CollectionPage = () => {
-  const [products, setProducts] = useState([]);
+  const { collection } = useParams();
+
+  // ✅ CORRECT usage
+  const [searchParams] = useSearchParams();
+
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector(
+    (state) => state.products
+  );
+
+  const queryParams = Object.fromEntries(searchParams.entries());
+
   const sidebarRef = useRef(null);
-  const buttonRef = useRef(null); // ✅ separate ref for button
+  const buttonRef = useRef(null);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchProductsByFilters({ collection, ...queryParams }));
+  }, [dispatch, collection, searchParams]);
 
   const toggleSidebar = () => {
     setIsSideBarOpen((prev) => !prev);
   };
 
   const handleClickOutside = (e) => {
-    // close sidebar if clicked outside both sidebar and button
     if (
       sidebarRef.current &&
       !sidebarRef.current.contains(e.target) &&
@@ -31,38 +49,6 @@ const CollectionPage = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      const fetchProducts = [
-        {
-          _id: 1,
-          name: "Product 1",
-          price: 300,
-          images: [{ url: "https://picsum.photos/500/500?random=1", altText: "Stylish Jacket 1" }],
-        },
-        {
-          _id: 2,
-          name: "Product 2",
-          price: 300,
-          images: [{ url: "https://picsum.photos/500/500?random=2", altText: "Stylish Jacket 2" }],
-        },
-        {
-          _id: 3,
-          name: "Product 3",
-          price: 300,
-          images: [{ url: "https://picsum.photos/500/500?random=3", altText: "Stylish Jacket 3" }],
-        },
-        {
-          _id: 4,
-          name: "Product 4",
-          price: 300,
-          images: [{ url: "https://picsum.photos/500/500?random=4", altText: "Stylish Jacket 4" }],
-        },
-      ];
-      setProducts(fetchProducts);
-    }, 1000);
   }, []);
 
   return (
@@ -91,11 +77,13 @@ const CollectionPage = () => {
       <div className="flex-grow p-4">
         <h2 className="text-2xl uppercase mb-4">All Collections</h2>
 
-        {/* Sort Options */}
         <SortOptions />
 
-        {/* Product Grid */}
-        <ProductGrid products={products} />
+        <ProductGrid
+          products={products}
+          loading={loading}
+          error={error}
+        />
       </div>
     </div>
   );
