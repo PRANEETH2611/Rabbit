@@ -10,7 +10,7 @@ export const fetchUserOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/orders/my-order`,
+        `${import.meta.env.VITE_BACKEND_URL}api/orders/my-order`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,

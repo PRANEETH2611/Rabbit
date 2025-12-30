@@ -16,7 +16,7 @@ export const fetchAdminProducts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/admin/products`,
+        `${API_URL}api/admin/products`,
         { headers: getAuthHeaders() }
       );
       return response.data;
@@ -36,7 +36,7 @@ export const createProduct = createAsyncThunk(
   async (productData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${API_URL}/api/admin/products`,
+        `${API_URL}api/admin/products`,
         productData,
         { headers: getAuthHeaders() }
       );
@@ -57,7 +57,7 @@ export const updateProduct = createAsyncThunk(
   async ({ id, productData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `${API_URL}/api/admin/products/${id}`,
+        `${API_URL}api/admin/products/${id}`,
         productData,
         { headers: getAuthHeaders() }
       );
@@ -78,7 +78,7 @@ export const deleteProduct = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(
-        `${API_URL}/api/admin/products/${id}`,
+        `${API_URL}api/admin/products/${id}`,
         { headers: getAuthHeaders() }
       );
       return id;
