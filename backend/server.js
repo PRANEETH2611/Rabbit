@@ -14,6 +14,10 @@ import productAdminRoutes from "./routes/productAdminRoutes.js";
 import adminOrderRoutes from "./routes/adminOrderRoutes.js";
 
 const app = express();
+
+// app.use(cors());
+// app.use(json();
+
 app.use(express.json());
 app.use(
   cors({
