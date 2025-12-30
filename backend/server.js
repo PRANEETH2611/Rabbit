@@ -14,8 +14,20 @@ import productAdminRoutes from "./routes/productAdminRoutes.js";
 import adminOrderRoutes from "./routes/adminOrderRoutes.js";
 
 const app = express();
-app.use(json());
-app.use(cors());
+
+// app.use(cors());
+// app.use(json();
+
+app.use(express.json());
+app.use(
+  cors({
+    origin: [
+      "https://rabbit-n685.vercel.app", // frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 config();
 
