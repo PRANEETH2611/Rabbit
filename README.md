@@ -21,7 +21,6 @@ Rabbit is a modern clothing e-commerce platform built to showcase style with spe
 ☁️ Cloud Deployed – Hosted on Vercel for reliability and performance
 
 📱 Mobile-Friendly Design – Fashion that fits every screen
-----------------------------------------------------------------------------------
 
 🧵 Tech Stack
 
@@ -32,7 +31,7 @@ Build Tool: Vite
 Styling: CSS / Tailwind / Custom styles (as per project)
 
 Deployment: Vercel
------------------------------------------------------------------------------------
+
 🚀 Getting Started Locally
 
 Bring the store to your machine:
@@ -42,8 +41,8 @@ Bring the store to your machine:
 Node.js (v16 or higher)
 
 npm or yarn
--------------------------------------------------------------------------------------
-Installation
+
+🛠️ Installation
 # Clone the repository
 git clone https://github.com/your-username/rabbit.git
 
@@ -59,7 +58,28 @@ yarn install
 npm run dev
 # or
 yarn dev
---------------------------------------------------------------------------------------
+
+
+Open your browser and step into the store at:
+http://localhost:5173/
+
+🧺 Project Structure
+📦 src
+├── assets/          # Images, banners, icons
+├── components/      # Reusable UI components
+├── pages/           # Pages (Home, Shop, Cart, etc.)
+├── redux/           # State management (if used)
+├── App.jsx          # Main app component
+└── main.jsx         # Entry point
+
+
+Each folder stitches together the fabric of the experience.
+
+🧪 Available Scripts
+Command	Description
+npm run dev	Start development server
+npm run build	Build for production
+npm run preview	Preview production build
 ☁️ Deployment
 
 Rabbit is deployed using Vercel, ensuring:
@@ -71,7 +91,6 @@ Global CDN delivery
 Effortless scaling
 
 Simply connect the repository to Vercel and let the cloud do the rest.
----------------------------------------------------------------------------------------
 
 🌱 Future Enhancements
 
@@ -86,13 +105,11 @@ Admin dashboard for product management
 Wishlist & recommendations
 
 The runway is long — the collection will grow.
-----------------------------------------------------------------------------------------
 
 🤍 Contributing
 
 Contributions are welcome.
 Fork the repo, raise a PR, and leave your mark — fashion evolves through collaboration.
-------------------------------------------------------------------------------------------
 
 📜 License
 
