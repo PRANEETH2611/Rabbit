@@ -109,6 +109,8 @@ The runway is long — the collection will grow.
 🤍 Contributing
 
 Contributions are welcome.
+
+Contributed by Katkuri Praneeth Reddy
 Fork the repo, raise a PR, and leave your mark — fashion evolves through collaboration.
 
 📜 License
