@@ -116,4 +116,4 @@ Fork the repo, raise a PR, and leave your mark — fashion evolves through colla
 This project is licensed under the MIT License —
 free, open, and meant to be worn by the world.
 
-Contributed by Katkuri Praneeth Reddy
+Contributed by Katkuri Praneeth Reddy @PRANEETH2611
