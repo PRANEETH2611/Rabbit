@@ -14,7 +14,7 @@ export const fetchAllOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/admin/orders`, // ✅ FIXED
+        `${API_URL}api/admin/orders`, // ✅ FIXED
         { headers: getAuthHeaders() }
       );
       return response.data;
@@ -32,7 +32,7 @@ export const updateOrderStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `${API_URL}/api/admin/orders/${id}`, // ✅ FIXED
+        `${API_URL}api/admin/orders/${id}`, // ✅ FIXED
         { status },
         { headers: getAuthHeaders() }
       );
@@ -51,7 +51,7 @@ export const deleteOrder = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(
-        `${API_URL}/api/admin/orders/${id}`, // ✅ FIXED
+        `${API_URL}api/admin/orders/${id}`, // ✅ FIXED
         { headers: getAuthHeaders() }
       );
       return id;
